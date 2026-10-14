@@ -197,7 +197,16 @@ def clean_sales_data(raw_df: pd.DataFrame) -> Dict[str, Any]:
 
     # Añadir columna Año-Mes para análisis temporal
     df_clean["Mes_Anio"] = df_clean["Fecha"].dt.strftime("%Y-%m")
-    df_clean["Dia_Semana"] = df_clean["Fecha"].dt.day_name(locale="Spanish") if hasattr(df_clean["Fecha"].dt, "day_name") else df_clean["Fecha"].dt.strftime("%A")
+    dias_semana_map = {
+        0: "Lunes",
+        1: "Martes",
+        2: "Miércoles",
+        3: "Jueves",
+        4: "Viernes",
+        5: "Sábado",
+        6: "Domingo",
+    }
+    df_clean["Dia_Semana"] = df_clean["Fecha"].dt.dayofweek.map(dias_semana_map)
 
     # Ordenar cronológicamente
     df_clean = df_clean.sort_values(by=["Fecha", "ID_Transaccion"]).reset_index(drop=True)
